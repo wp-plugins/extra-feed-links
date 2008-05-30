@@ -1,4 +1,4 @@
-=== Custom Field Images ===
+=== Extra Feed Links ===
 Contributors: scribu
 Donate link: http://scribu.net/downloads
 Tags: archive, comments, feed, rss
