@@ -19,7 +19,7 @@ This plugin adds additional feed links besides the "All posts" feed added by def
 
 == Usage ==
 
-You can use extra_feed_link() inside your theme to display a link to the feed corresponding to the type of page.
+You can use `extra_feed_link()` inside your theme to display a link to the feed corresponding to the type of page.
 
 `<?php extra_feed_link('http://url/of/image'); ?>` (creates a link with a feed icon that you choose)
 
