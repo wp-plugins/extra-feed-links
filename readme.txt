@@ -2,8 +2,8 @@
 Contributors: scribu
 Donate link: http://scribu.net/downloads
 Tags: archive, comments, feed, rss
-Requires at least: 2.6
-Tested up to: 2.5.1
+Requires at least: 2.5
+Tested up to: 2.6
 Stable tag: trunk
 
 Adds appropriate feed links to the header of posts, pages, categories, tags, search and author pages.
