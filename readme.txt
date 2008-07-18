@@ -1,6 +1,6 @@
 === Extra Feed Links ===
 Contributors: scribu
-Donate link: http://scribu.net/downloads
+Donate link: http://scribu.net/porjects/extra-feed-links.html
 Tags: archive, comments, feed, rss
 Requires at least: 2.5
 Tested up to: 2.6
@@ -10,7 +10,13 @@ Adds appropriate feed links to the header of posts, pages, categories, tags, sea
 
 == Description ==
 
-This plugin adds additional feed links besides the "All posts" feed added by default to every theme.
+This plugin adds additional feed links besides the "All posts" feed added by default to the header:
+
+* Comments feed for single articles and pages
+* Category page feed
+* Tag page feed
+* Search page feed
+* Author page feed
 
 == Installation ==
 
