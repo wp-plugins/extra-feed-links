@@ -5,7 +5,7 @@ Version: 1.0
 Description: Adds appropriate feed links to the header of posts, pages, categories, tags, search and author pages.
 Author: scribu
 Author URI: http://scribu.net/
-Plugin URI: http://scribu.net/download/extra-feed-links.html
+Plugin URI: http://scribu.net/projects/extra-feed-links.html
 */
 
 class extraFeedLink {
