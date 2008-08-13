@@ -1,6 +1,6 @@
 === Extra Feed Links ===
 Contributors: scribu
-Donate link: http://scribu.net/projects/extra-feed-links.html
+Donate link: http://scribu.net/porjects/extra-feed-links.html
 Tags: archive, comments, feed, rss
 Requires at least: 2.5
 Tested up to: 2.6
