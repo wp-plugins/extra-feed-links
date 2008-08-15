@@ -10,18 +10,17 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		);
 
 	function __construct() {
-		register_activation_hook(__FILE__, array(&$this, 'activate'));
-		add_action('admin_menu', array(&$this, 'page_init'));
-	}
-
-	function activate() {
 		add_option('efl-display', $this->defaults);
+		add_action('admin_menu', array(&$this, 'page_init'));
 	}
 
 	// Options page
 	function page_init() {
-		$page = add_options_page('Extra Feed Links', 'Extra Feed Links', 8, 'extra-feed-links', array(&$this, 'page'));
-		add_action("admin_print_scripts-$page", array(&$this, 'page_head'));
+		if ( current_user_can('manage_options') ) {
+			$page = add_options_page('Extra Feed Links', 'Extra Feed Links', 8, 'extra-feed-links', array(&$this, 'page'));
+			add_action("admin_print_scripts-$page", array(&$this, 'page_head'));
+			add_filter( 'plugin_action_links', array(&$this, 'filter_plugin_actions'), 10, 2 );
+		}
 	}
 
 	function page_head() {
@@ -82,6 +81,18 @@ class extraFeedLinkAdmin extends extraFeedLink {
 	<br class="clear">
 </div></div>
 <?php	}
+
+	function filter_plugin_actions($links, $file) {
+		static $this_plugin;
+		if ( ! $this_plugin )
+			$this_plugin = plugin_basename(dirname(__FILE__)) . '/extra-feed-links.php';
+
+		if ( $file == $this_plugin ) {
+			$settings_link = '<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>';
+			$links[] = $settings_link;
+		}
+		return $links;
+	}
 
 	function get_plugin_url() {
 		if ( function_exists('plugin_url') )
