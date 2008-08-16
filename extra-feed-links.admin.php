@@ -11,6 +11,7 @@ class extraFeedLinkAdmin extends extraFeedLink {
 
 	function __construct() {
 		add_option('efl-display', $this->defaults);
+
 		add_action('admin_menu', array(&$this, 'page_init'));
 	}
 
