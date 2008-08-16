@@ -25,7 +25,6 @@ class extraFeedLinkAdmin extends extraFeedLink {
 	}
 
 	function page_head() {
-		// Set plugin url
 		$plugin_url = $this->get_plugin_url();
 
 		wp_enqueue_script('form_js', $plugin_url . '/functions.js');
@@ -96,11 +95,11 @@ class extraFeedLinkAdmin extends extraFeedLink {
 	}
 
 	function get_plugin_url() {
-		if ( function_exists('plugin_url') )
-			return plugin_url();
+		if ( function_exists('plugins_url') )
+			return plugins_url( plugin_basename( dirname(__FILE__) ) );
 		else
 			// Pre-2.6 compatibility
-			return get_option('siteurl') . '/wp-content/plugins/' . plugin_basename(dirname(__FILE__));
+			return get_option('siteurl') . '/wp-content/plugins/' . plugin_basename( dirname(__FILE__) );
 	}
 }
 
