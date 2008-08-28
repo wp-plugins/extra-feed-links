@@ -1,16 +1,17 @@
 <?php
 class extraFeedLinkAdmin extends extraFeedLink {
-	var $defaults = array(
-			'home' => array(TRUE, 'All comments'),
-			'comments' => array(TRUE, 'Comments: '),
-			'category' => array(TRUE, 'Category: '),
-			'tag' => array(TRUE, 'Tag: '),
-			'search' => array(TRUE, 'Search: '),
-			'author' => array(TRUE, 'Author: ')
+	var $default_format = array(
+			'home' => array(TRUE, 'All comments for %site_title%'),
+			'comments' => array(TRUE, 'Comments: %title%'),
+			'category' => array(TRUE, 'Category: %title%'),
+			'tag' => array(TRUE, 'Tag: %title%'),
+			'search' => array(TRUE, 'Search: %title%'),
+			'author' => array(TRUE, 'Author: %title%')
 		);
 
 	function __construct() {
-		add_option('efl-display', $this->defaults);
+		delete_option('efl-display');
+		add_option('efl-format', $this->default_format);
 
 		add_action('admin_menu', array(&$this, 'page_init'));
 	}
@@ -30,26 +31,26 @@ class extraFeedLinkAdmin extends extraFeedLink {
 	}
 
 	function page() {
-		$this->display = get_option('efl-display');
+		$this->format = get_option('efl-format');
 
-		// Update display options
+		// Update format options
 		if ( $_POST['efl-submit'] ) {
-			foreach ($this->display as $name => $value) {
-				$this->display[$name][0] = $_POST['show-' . $name];
-				$this->display[$name][1] = $_POST['before-' . $name];
+			foreach ($this->format as $name => $value) {
+				$this->format[$name][0] = $_POST['show-' . $name];
+				$this->format[$name][1] = $_POST['before-' . $name];
 			}
 
-			update_option('efl-display', $this->display);
+			update_option('efl-format', $this->format);
 			echo '<div class="updated"><p>Options saved.</p></div>';
 		}
 ?>
 <div class="wrap">
 <h2>Extra Feed Links</h2>
 
-<p>The table below allows you to select which page categories get an extra header link and what text to display before this link.</p>
+<p>The table below allows you to select which page categories get an extra header link and the format of the link text.</p>
 
 <div class="alignleft" style="width:auto">
-<form id="efl-display" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>" width="200px">
+<form id="efl-format" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>" width="200px">
 <div class="tablenav" style="width:auto">
 	<div class="alignleft">
 	<input type="submit" class="button-secondary" name="efl-submit" value="Save" />
@@ -67,18 +68,24 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		</tr>
 		</thead>
 		<tbody>
-		<?php foreach($this->display as $name => $value) { ?>
+		<?php foreach($this->format as $name => $value) { ?>
 		<tr>
-			<th scope='row' class='check-column'><input type="checkbox" name="show-<?php echo $name ?>" value="1" <?php if ( $this->display[$name][0] ) echo 'checked="checked"' ?> /></th>
+			<th scope='row' class='check-column'><input type="checkbox" name="show-<?php echo $name ?>" value="1" <?php if ( $this->format[$name][0] ) echo 'checked="checked"' ?> /></th>
 			<td><?php echo ucfirst($name) ?></td>
-			<td><input type="text" name="before-<?php echo $name ?>" value="<?php echo $this->display[$name][1] ?>" size="25" /></td>
+			<td><input type="text" name="before-<?php echo $name ?>" value="<?php echo $this->format[$name][1] ?>" size="25" /></td>
 		</tr>
 		<?php } ?>
 		</tbody>
 		</table>
 	</form>
 	<br class="clear">
-</div></div>
+</div>
+<p style="clear:both">Available formats are:</p>
+<ul>
+	<li><em>%title%</em> - displays the corresponding title for each page type</li>
+	<li><em>%site_title%</em> - displays the title of the site</li>
+</ul>
+</div>
 <?php	}
 
 	function get_plugin_url() {
