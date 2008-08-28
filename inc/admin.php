@@ -10,7 +10,6 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		);
 
 	function __construct() {
-		delete_option('efl-display');
 		add_option('efl-format', $this->default_format);
 
 		add_action('admin_menu', array(&$this, 'page_init'));
