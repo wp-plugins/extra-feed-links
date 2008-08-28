@@ -20,14 +20,13 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		if ( current_user_can('manage_options') ) {
 			$page = add_options_page('Extra Feed Links', 'Extra Feed Links', 8, 'extra-feed-links', array(&$this, 'page'));
 			add_action("admin_print_scripts-$page", array(&$this, 'page_head'));
-			add_filter( 'plugin_action_links', array(&$this, 'filter_plugin_actions'), 10, 2 );
 		}
 	}
 
 	function page_head() {
 		$plugin_url = $this->get_plugin_url();
 
-		wp_enqueue_script('form_js', $plugin_url . '/functions.js');
+		wp_enqueue_script('form_js', $plugin_url . '/inc/functions.js');
 	}
 
 	function page() {
@@ -82,24 +81,12 @@ class extraFeedLinkAdmin extends extraFeedLink {
 </div></div>
 <?php	}
 
-	function filter_plugin_actions($links, $file) {
-		static $this_plugin;
-		if ( ! $this_plugin )
-			$this_plugin = plugin_basename(dirname(__FILE__)) . '/extra-feed-links.php';
-
-		if ( $file == $this_plugin ) {
-			$settings_link = '<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>';
-			$links[] = $settings_link;
-		}
-		return $links;
-	}
-
 	function get_plugin_url() {
 		if ( function_exists('plugins_url') )
-			return plugins_url( plugin_basename( dirname(__FILE__) ) );
+			return plugins_url( plugin_basename( dirname(dirname(__FILE__)) ) );
 		else
 			// Pre-2.6 compatibility
-			return get_option('siteurl') . '/wp-content/plugins/' . plugin_basename( dirname(__FILE__) );
+			return get_option('siteurl') . '/wp-content/plugins/' . plugin_basename( dirname(dirname(__FILE__)) );
 	}
 }
 
