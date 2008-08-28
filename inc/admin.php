@@ -33,27 +33,34 @@ class extraFeedLinkAdmin extends extraFeedLink {
 	function page() {
 		$this->format = get_option('efl-format');
 
-		// Update format options
-		if ( $_POST['efl-submit'] ) {
+		// Update options
+		if ( $_POST['submit-format'] ) {
 			foreach ($this->format as $name => $value) {
 				$this->format[$name][0] = $_POST['show-' . $name];
-				$this->format[$name][1] = $_POST['before-' . $name];
+				$this->format[$name][1] = $_POST['format-' . $name];
 			}
 
 			update_option('efl-format', $this->format);
 			echo '<div class="updated"><p>Options saved.</p></div>';
 		}
+
+		// Reset options
+		if ( $_POST['submit-reset'] ) {
+			update_option('efl-format', $this->default_format);
+			$this->format = $this->default_format;
+			echo '<div class="updated"><p>Options reset.</p></div>';
+		}
 ?>
 <div class="wrap">
 <h2>Extra Feed Links</h2>
-
-<p>The table below allows you to select which page categories get an extra header link and the format of the link text.</p>
+<h3>Options</h3>
+<p>The table below allows you to select which page types get an extra header link and the format of the link text.</p>
 
 <div class="alignleft" style="width:auto">
 <form id="efl-format" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>" width="200px">
 <div class="tablenav" style="width:auto">
 	<div class="alignleft">
-	<input type="submit" class="button-secondary" name="efl-submit" value="Save" />
+	<input type="submit" name="submit-format" class="button-secondary" value="Save" />
 	</div>
 	<br class="clear">
 </div>
@@ -64,7 +71,7 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		<tr>
 			<th scope="col" class="check-column"><input type="checkbox" /></th>
 			<th scope="col">Page type</th>
-			<th scope="col">Text before</th>
+			<th scope="col">Text format</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -72,7 +79,7 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		<tr>
 			<th scope='row' class='check-column'><input type="checkbox" name="show-<?php echo $name ?>" value="1" <?php if ( $this->format[$name][0] ) echo 'checked="checked"' ?> /></th>
 			<td><?php echo ucfirst($name) ?></td>
-			<td><input type="text" name="before-<?php echo $name ?>" value="<?php echo $this->format[$name][1] ?>" size="25" /></td>
+			<td><input type="text" name="format-<?php echo $name ?>" value="<?php echo $this->format[$name][1] ?>" size="25" /></td>
 		</tr>
 		<?php } ?>
 		</tbody>
@@ -85,6 +92,12 @@ class extraFeedLinkAdmin extends extraFeedLink {
 	<li><em>%title%</em> - displays the corresponding title for each page type</li>
 	<li><em>%site_title%</em> - displays the title of the site</li>
 </ul>
+
+<h3>Reset</h3>
+<p>This will revert to default options.</p>
+<form id="efl-reset" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>" width="200px">
+	<input type="submit" name="submit-reset" class="button" value="Reset" />
+</form>
 </div>
 <?php	}
 
