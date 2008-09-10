@@ -33,7 +33,7 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		$this->format = get_option('efl-format');
 
 		// Update options
-		if ( $_POST['submit-format'] ) {
+		if ( $_POST['action'] === 'Save') {
 			foreach ($this->format as $name => $value) {
 				$this->format[$name][0] = $_POST['show-' . $name];
 				$this->format[$name][1] = $_POST['format-' . $name];
@@ -44,7 +44,7 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		}
 
 		// Reset options
-		if ( $_POST['submit-reset'] ) {
+		if ( $_POST['action'] === 'Reset') {
 			update_option('efl-format', $this->default_format);
 			$this->format = $this->default_format;
 			echo '<div class="updated"><p>Options <strong>reset</strong>.</p></div>';
@@ -77,33 +77,22 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		</table>
 
 	<div class="tablenav" style="width:auto">
-	<div class="alignleft">
-	<input type="submit" name="submit-format" class="button-secondary" value="Save" />
-	</div>
-	<br class="clear">
+		<div class="alignleft">
+			<input name="action" type="submit" class="button-secondary" value="Save" />
+			<input name="action" type="submit" class="button-secondary" onClick="return confirm('Are you sure you want to reset to defaults?')" value="Reset" />
+		</div>
 	</div>
 
 	</form>
-	<br class="clear">
 </div>
 
 <div style="float:left; margin-left: 50px">
-<p>Available formats are:</p>
+<p>Available substitution tags:</p>
 
 <em>%title%</em> - displays the corresponding title for each page type<br />
 <em>%site_title%</em> - displays the title of the site
 
 </div>
-
-<br class="clear" />
-
-<h2>Reset</h2>
-<p>This will revert to default options.</p>
-<form id="efl-reset" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
-	<p class="submit">
-		<input type="submit" name="submit-reset" class="button" value="Reset" />
-	</p>
-</form>
 
 </div>
 <?php	}
