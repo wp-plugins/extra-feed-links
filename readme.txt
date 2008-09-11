@@ -23,22 +23,11 @@ This plugin adds additional feed links besides the "All posts" feed added by def
 1. Unzip the archive and put the folder into your plugins folder (/wp-content/plugins/).
 1. Activate the plugin from the Plugins admin menu.
 
-== Usage ==
+**Usage**
 
 You can use `extra_feed_link()` inside your theme to display a link to the feed corresponding to the type of page:
 
 * `<?php extra_feed_link(); ?>` (creates a link with the default text)
 * `<?php extra_feed_link('Link Text'); ?>` (creates a link with the text you choose)
-* `<?php extra_feed_link('http://url/of/image'); ?>` (creates a link with a feed icon with that url)
-* `<?php extra_feed_link('raw'); ?>` (just echoes the feed url)
-
-== Version history ==
-
-* **1.0**
- * added options page
-
-* **0.6**
- * added theme link function
-
-* **0.5**
- * initial release
+* `<?php extra_feed_link('http://url/of/image'); ?>` (creates a link with a feed icon with that URL)
+* `<?php extra_feed_link('raw'); ?>` (just displays the feed URL)
