@@ -24,9 +24,7 @@ class extraFeedLinkAdmin extends extraFeedLink {
 	}
 
 	function page_head() {
-		$plugin_url = $this->get_plugin_url();
-
-		wp_enqueue_script('form_js', $plugin_url . '/inc/functions.js');
+		wp_enqueue_script('efl_form_js', EFL_PLUGIN_URL . '/inc/functions.js');
 	}
 
 	function page() {
@@ -87,24 +85,14 @@ class extraFeedLinkAdmin extends extraFeedLink {
 </div>
 
 <div style="float:left; margin-left: 50px">
-<p>Available substitution tags:</p>
-
-<em>%title%</em> - displays the corresponding title for each page type<br />
-<em>%site_title%</em> - displays the title of the site
-
+	<p>Available substitution tags:</p>
+	<ul>
+		<li><em>%title%</em> - displays the corresponding title for each page type</li>
+		<li><em>%site_title%</em> - displays the title of the site</li>
+	</ul>
 </div>
 
 </div>
 <?php	}
-
-	function get_plugin_url() {
-		if ( function_exists('plugins_url') )
-			return plugins_url( plugin_basename( dirname(dirname(__FILE__)) ) );
-		else
-			// Pre-2.6 compatibility
-			return get_option('siteurl') . '/wp-content/plugins/' . plugin_basename( dirname(dirname(__FILE__)) );
-	}
 }
 
-$extraFeedLinkAdmin = new extraFeedLinkAdmin();
-?>
