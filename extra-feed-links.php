@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Extra Feed Links
-Version: 1.1.2a
+Version: 1.1.2
 Description: (<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>) Adds appropriate feed links to the header of posts, pages, categories, tags, search and author pages.
 Author: scribu
 Author URI: http://scribu.net/
@@ -144,11 +144,11 @@ class extraFeedLink {
 }
 
 // Init
-global $extraFeedLink, $extraFeedLinkAdmin;
+global $extraFeedLink;
 
 if ( is_admin() ) {
 	require_once ('inc/admin.php');
-	$extraFeedLinkAdmin = new extraFeedLinkAdmin();
+	$extraFeedLink = new extraFeedLinkAdmin();
 }
 else
 	$extraFeedLink = new extraFeedLink();

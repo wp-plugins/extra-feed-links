@@ -4,7 +4,7 @@ Donate link: http://scribu.net/projects
 Tags: archive, comments, feed, rss
 Requires at least: 2.5
 Tested up to: 2.6+
-Stable tag: 1.1.1
+Stable tag: 1.1.2
 
 Adds appropriate feed links to the header of posts, pages, categories, tags, search and author pages.
 
