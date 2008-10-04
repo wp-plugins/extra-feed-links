@@ -1,12 +1,24 @@
 <?php
 /*
 Plugin Name: Extra Feed Links
-Version: 1.1.1
+Version: 1.1.2
 Description: (<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>) Adds appropriate feed links to the header of posts, pages, categories, tags, search and author pages.
 Author: scribu
 Author URI: http://scribu.net/
 Plugin URI: http://scribu.net/projects/extra-feed-links.html
 */
+
+// Pre-2.6 compatibility
+if ( ! defined( 'WP_CONTENT_URL' ) )
+	define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
+if ( ! defined( 'WP_CONTENT_DIR' ) )
+	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
+if ( ! defined( 'WP_PLUGIN_URL' ) )
+	define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
+if ( ! defined( 'WP_PLUGIN_DIR' ) )
+	define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
+
+define( 'EFL_PLUGIN_URL', WP_PLUGIN_URL . '/' . basename(dirname(__FILE__)) );
 
 class extraFeedLink {
 	var $format_name;
@@ -17,7 +29,7 @@ class extraFeedLink {
 
 	function __construct() {
 		$this->format = get_option('efl-format');
-		add_action('wp_head', array(&$this, 'head_link'));
+		add_action('wp_head', array($this, 'head_link'));
 	}
 
 	function head_link() {
@@ -100,7 +112,7 @@ class extraFeedLink {
 		$this->text = str_replace('%site_title%', get_option('blogname'), $this->text);
 	}
 
-	//Fixes bug in WP lower than 2.5.2
+	//Fixes bug in WP lower than 2.6
 	function get_tag_feed_link($tag_id, $feed = '') {
 		$tag_id = (int) $tag_id;
 
@@ -114,9 +126,9 @@ class extraFeedLink {
 		if ( empty($feed) )
 			$feed = get_default_feed();
 
-		if ( '' == $permalink_structure ) {
+		if ( '' == $permalink_structure )
 			$link = get_option('home') . "?feed=$feed&amp;tag=" . $tag->slug;
-		} else {
+		else {
 			$link = get_tag_link($tag->term_id);
 			if ( $feed == get_default_feed() )
 				$feed_link = 'feed';
@@ -132,10 +144,12 @@ class extraFeedLink {
 }
 
 // Init
-global $extraFeedLink, $extraFeedLinkAdmin;
+global $extraFeedLink;
 
-if ( is_admin() )
+if ( is_admin() ) {
 	require_once ('inc/admin.php');
+	$extraFeedLink = new extraFeedLinkAdmin();
+}
 else
 	$extraFeedLink = new extraFeedLink();
 
@@ -145,4 +159,4 @@ function extra_feed_link($input = '') {
 
 	$extraFeedLink->theme_link($input);
 }
-?>
+
