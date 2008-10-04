@@ -12,19 +12,19 @@ class extraFeedLinkAdmin extends extraFeedLink {
 	function __construct() {
 		add_option('efl-format', $this->default_format);
 
-		add_action('admin_menu', array(&$this, 'page_init'));
+		add_action('admin_menu', array($this, 'page_init'));
 	}
 
 	// Options page
 	function page_init() {
 		if ( current_user_can('manage_options') ) {
-			$page = add_options_page('Extra Feed Links', 'Extra Feed Links', 8, 'extra-feed-links', array(&$this, 'page'));
-			add_action("admin_print_scripts-$page", array(&$this, 'page_head'));
+			$page = add_options_page('Extra Feed Links', 'Extra Feed Links', 8, 'extra-feed-links', array($this, 'page'));
+			add_action("admin_print_scripts-$page", array($this, 'page_head'));
 		}
 	}
 
 	function page_head() {
-		wp_enqueue_script('efl_form_js', EFL_PLUGIN_URL . '/inc/functions.js');
+		wp_enqueue_script('admin-forms');
 	}
 
 	function page() {

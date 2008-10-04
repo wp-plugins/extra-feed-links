@@ -29,7 +29,7 @@ class extraFeedLink {
 
 	function __construct() {
 		$this->format = get_option('efl-format');
-		add_action('wp_head', array(&$this, 'head_link'));
+		add_action('wp_head', array($this, 'head_link'));
 	}
 
 	function head_link() {
