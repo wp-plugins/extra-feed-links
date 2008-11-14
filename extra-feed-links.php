@@ -2,7 +2,7 @@
 /*
 Plugin Name: Extra Feed Links
 Version: 1.1.3a
-Description: (<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>) Adds appropriate feed links to the header of posts, pages, categories, tags, search and author pages.
+Description: (<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>) Adds appropriate feed auto-discovery links to posts, pages, category pages, tag pages, search pages and author pages.
 Author: scribu
 Author URI: http://scribu.net/
 Plugin URI: http://scribu.net/projects/extra-feed-links.html
