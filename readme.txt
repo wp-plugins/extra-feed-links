@@ -6,22 +6,25 @@ Requires at least: 2.5
 Tested up to: 2.6+
 Stable tag: 1.1.2
 
-Adds appropriate feed links to the header of posts, pages, categories, tags, search and author pages.
+Adds feed auto-discovery links to posts, pages, categories, tags, search and author pages.
 
 == Description ==
 
-This plugin adds additional feed links besides the "All posts" feed added by default to the header:
+This plugin adds feed auto-discovery links to any page type:
 
+* Category page
+* Tag page
+* Search page
+* Author page
 * Comments feed for single articles and pages
-* Category page feed
-* Tag page feed
-* Search page feed
-* Author page feed
+
+It also has a template tag that you can use in your theme.
 
 == Installation ==
 
 1. Unzip the archive and put the folder into your plugins folder (/wp-content/plugins/).
 1. Activate the plugin from the Plugins admin menu.
+1. Customize the links in the settings page.
 
 **Usage**
 
@@ -29,5 +32,5 @@ You can use `extra_feed_link()` inside your theme to display a link to the feed 
 
 * `<?php extra_feed_link(); ?>` (creates a link with the default text)
 * `<?php extra_feed_link('Link Text'); ?>` (creates a link with the text you choose)
-* `<?php extra_feed_link('http://url/of/image'); ?>` (creates a link with a feed icon with that URL)
+* `<?php extra_feed_link('http://url/of/image'); ?>` (creates an image tag linked to the feed URL)
 * `<?php extra_feed_link('raw'); ?>` (just displays the feed URL)

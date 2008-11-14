@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Extra Feed Links
-Version: 1.1.2
+Version: 1.1.3a
 Description: (<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>) Adds appropriate feed links to the header of posts, pages, categories, tags, search and author pages.
 Author: scribu
 Author URI: http://scribu.net/
@@ -107,12 +107,12 @@ class extraFeedLink {
 		// Set the appropriate format
 		$this->text = $this->format[$this->format_name][1];
 
-		// Convert the tokens
+		// Convert substitution tags
 		$this->text = str_replace('%title%', $this->title, $this->text);
 		$this->text = str_replace('%site_title%', get_option('blogname'), $this->text);
 	}
 
-	//Fixes bug in WP lower than 2.6
+	// Fixes bug in WP lower than 2.6
 	function get_tag_feed_link($tag_id, $feed = '') {
 		$tag_id = (int) $tag_id;
 
@@ -153,7 +153,7 @@ if ( is_admin() ) {
 else
 	$extraFeedLink = new extraFeedLink();
 
-// Functions
+// Template tag
 function extra_feed_link($input = '') {
 	global $extraFeedLink;
 
