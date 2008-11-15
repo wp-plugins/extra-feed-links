@@ -84,7 +84,7 @@ class extraFeedLinkAdmin extends extraFeedLink {
 
 	<div class="tablenav" style="width:auto">
 		<div class="alignleft">
-			<input name="action" type="submit" class="button-secondary" value="Save" />
+			<input name="action" type="submit" class="button-primary" value="Save Changes" />
 			<input name="action" type="submit" class="button-secondary" onClick="return confirm('Are you sure you want to reset to defaults?')" value="Reset" />
 		</div>
 	</div>
