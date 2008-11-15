@@ -2,7 +2,7 @@
 /*
 Plugin Name: Extra Feed Links
 Version: 1.1.3a
-Description: (<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>) Adds appropriate feed auto-discovery links to posts, pages, category pages, tag pages, search pages and author pages.
+Description: (<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>) Adds extra feed auto-discovery links to various page types (categories, tags, search results etc.).
 Author: scribu
 Author URI: http://scribu.net/
 Plugin URI: http://scribu.net/projects/extra-feed-links.html
@@ -27,9 +27,9 @@ class extraFeedLink {
 	var $title;
 	var $text;
 
-	function __construct() {
+	function extraFeedLink() {
 		$this->format = get_option('efl-format');
-		add_action('wp_head', array($this, 'head_link'));
+		add_action('wp_head', array(&$this, 'head_link'));
 	}
 
 	function head_link() {

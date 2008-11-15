@@ -3,10 +3,10 @@ Contributors: scribu
 Donate link: http://scribu.net/projects
 Tags: archive, comments, feed, rss
 Requires at least: 2.5
-Tested up to: 2.6+
+Tested up to: 2.7
 Stable tag: 1.1.2
 
-Adds feed auto-discovery links to posts, pages, categories, tags, search and author pages.
+Adds extra feed auto-discovery links to various page types (categories, tags, search results etc.)
 
 == Description ==
 

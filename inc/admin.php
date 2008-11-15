@@ -9,17 +9,17 @@ class extraFeedLinkAdmin extends extraFeedLink {
 			'author' => array(TRUE, 'Author: %title%')
 		);
 
-	function __construct() {
+	function extraFeedLinkAdmin() {
 		add_option('efl-format', $this->default_format);
 
-		add_action('admin_menu', array($this, 'page_init'));
+		add_action('admin_menu', array(&$this, 'page_init'));
 	}
 
 	// Options page
 	function page_init() {
 		if ( current_user_can('manage_options') ) {
-			$page = add_options_page('Extra Feed Links', 'Extra Feed Links', 8, 'extra-feed-links', array($this, 'page'));
-			add_action("admin_print_scripts-$page", array($this, 'page_head'));
+			$page = add_options_page('Extra Feed Links', 'Extra Feed Links', 8, 'extra-feed-links', array(&$this, 'page'));
+			add_action("admin_print_scripts-$page", array(&$this, 'page_head'));
 		}
 	}
 
@@ -27,11 +27,14 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		wp_enqueue_script('admin-forms');
 	}
 
-	function page() {
+	function update_options() {
 		$this->format = get_option('efl-format');
 
+		if ( !isset($_POST['action']) )
+			return;
+
 		// Update options
-		if ( $_POST['action'] === 'Save') {
+		if ( 'Save' == $_POST['action'] ) {
 			foreach ($this->format as $name => $value) {
 				$this->format[$name][0] = $_POST['show-' . $name];
 				$this->format[$name][1] = $_POST['format-' . $name];
@@ -42,11 +45,16 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		}
 
 		// Reset options
-		if ( $_POST['action'] === 'Reset') {
+		if ( 'Reset' == $_POST['action'] ) {
 			update_option('efl-format', $this->default_format);
+
 			$this->format = $this->default_format;
 			echo '<div class="updated"><p>Options <strong>reset</strong>.</p></div>';
 		}
+	}
+
+	function page() {
+		$this->update_options();
 ?>
 <div class="wrap">
 <h2>Extra Feed Links</h2>
@@ -54,7 +62,7 @@ class extraFeedLinkAdmin extends extraFeedLink {
 <p>The table below allows you to select which page types get an extra header link and the format of the link text.</p>
 
 <div class="alignleft" style="width:auto">
-<form id="efl-format" method="post" action="<?php echo str_replace( '%7E', '~', $_SERVER['REQUEST_URI']); ?>">
+<form method="post" action="">
 	<table class="widefat" style="width:auto">
 		<thead>
 		<tr>
