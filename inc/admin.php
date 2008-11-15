@@ -34,7 +34,7 @@ class extraFeedLinkAdmin extends extraFeedLink {
 			return;
 
 		// Update options
-		if ( 'Save' == $_POST['action'] ) {
+		if ( 'Save Changes' == $_POST['action'] ) {
 			foreach ($this->format as $name => $value) {
 				$this->format[$name][0] = $_POST['show-' . $name];
 				$this->format[$name][1] = $_POST['format-' . $name];
