@@ -5,8 +5,8 @@ class extraFeedLinkAdmin extends extraFeedLink {
 			'comments' => array(TRUE, 'Comments: %title%'),
 			'category' => array(TRUE, 'Category: %title%'),
 			'tag' => array(TRUE, 'Tag: %title%'),
-			'search' => array(TRUE, 'Search: %title%'),
-			'author' => array(TRUE, 'Author: %title%')
+			'author' => array(TRUE, 'Author: %title%'),
+			'search' => array(TRUE, 'Search: %title%')
 		);
 
 	function extraFeedLinkAdmin() {
@@ -19,12 +19,8 @@ class extraFeedLinkAdmin extends extraFeedLink {
 	function page_init() {
 		if ( current_user_can('manage_options') ) {
 			$page = add_options_page('Extra Feed Links', 'Extra Feed Links', 8, 'extra-feed-links', array(&$this, 'page'));
-			add_action("admin_print_scripts-$page", array(&$this, 'page_head'));
+			add_action("admin_print_scripts-$page", create_function('', "wp_enqueue_script('admin-forms');"));	// deprecated since WP 2.7
 		}
-	}
-
-	function page_head() {
-		wp_enqueue_script('admin-forms');
 	}
 
 	function update_options() {
@@ -84,7 +80,7 @@ class extraFeedLinkAdmin extends extraFeedLink {
 
 	<div class="tablenav" style="width:auto">
 		<div class="alignleft">
-			<input name="action" type="submit" class="button-primary" value="Save Changes" />
+			<input name="action" type="submit" class="button-primary button" value="Save Changes" />
 			<input name="action" type="submit" class="button-secondary" onClick="return confirm('Are you sure you want to reset to defaults?')" value="Reset" />
 		</div>
 	</div>
@@ -99,7 +95,7 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		<li><em>%site_title%</em> - displays the title of the site</li>
 	</ul>
 </div>
-
+<br class="clear" />
 </div>
 <?php	}
 }

@@ -1,24 +1,12 @@
 <?php
 /*
 Plugin Name: Extra Feed Links
-Version: 1.1.3a
+Version: 1.1.3
 Description: (<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>) Adds extra feed auto-discovery links to various page types (categories, tags, search results etc.).
 Author: scribu
 Author URI: http://scribu.net/
 Plugin URI: http://scribu.net/projects/extra-feed-links.html
 */
-
-// Pre-2.6 compatibility
-if ( ! defined( 'WP_CONTENT_URL' ) )
-	define( 'WP_CONTENT_URL', get_option( 'siteurl' ) . '/wp-content' );
-if ( ! defined( 'WP_CONTENT_DIR' ) )
-	define( 'WP_CONTENT_DIR', ABSPATH . 'wp-content' );
-if ( ! defined( 'WP_PLUGIN_URL' ) )
-	define( 'WP_PLUGIN_URL', WP_CONTENT_URL. '/plugins' );
-if ( ! defined( 'WP_PLUGIN_DIR' ) )
-	define( 'WP_PLUGIN_DIR', WP_CONTENT_DIR . '/plugins' );
-
-define( 'EFL_PLUGIN_URL', WP_PLUGIN_URL . '/' . basename(dirname(__FILE__)) );
 
 class extraFeedLink {
 	var $format_name;
@@ -35,7 +23,7 @@ class extraFeedLink {
 	function head_link() {
 		$this->generate();
 
-		if( !$this->url || !$this->text)
+		if( !$this->url || !$this->text )
 			return;
 
 		echo "\n" . '<link rel="alternate" type="application/rss+xml" title="' . $this->text . '" href="' . $this->url . '" />' . "\n";
@@ -84,16 +72,9 @@ class extraFeedLink {
 			global $wp_query;
 			$tag_obj = $wp_query->get_queried_object();
 
-			$this->url = $this->get_tag_feed_link($tag_obj->term_id);
+			$this->url = get_tag_feed_link($tag_obj->term_id);
 			$this->title = $tag_obj->name;
 			$this->format_name = 'tag';
-		}
-		elseif ( is_search() && ($this->format['search'][0] || $for_theme) ) {
-			$search = attribute_escape(get_search_query());
-
-			$this->url = get_search_feed_link($search);
-			$this->title = $search;
-			$this->format_name = 'search';
 		}
 		elseif ( is_author() && ($this->format['author'][0] || $for_theme) ) {
 			global $wp_query;
@@ -103,6 +84,13 @@ class extraFeedLink {
 			$this->title = $author_obj->user_nicename;
 			$this->format_name = 'author';
 		}
+		elseif ( is_search() && ($this->format['search'][0] || $for_theme) ) {
+			$search = attribute_escape(get_search_query());
+
+			$this->url = get_search_feed_link($search);
+			$this->title = $search;
+			$this->format_name = 'search';
+		}
 
 		// Set the appropriate format
 		$this->text = $this->format[$this->format_name][1];
@@ -110,36 +98,6 @@ class extraFeedLink {
 		// Convert substitution tags
 		$this->text = str_replace('%title%', $this->title, $this->text);
 		$this->text = str_replace('%site_title%', get_option('blogname'), $this->text);
-	}
-
-	// Fixes bug in WP lower than 2.6
-	function get_tag_feed_link($tag_id, $feed = '') {
-		$tag_id = (int) $tag_id;
-
-		$tag = get_tag($tag_id);
-
-		if ( empty($tag) || is_wp_error($tag) )
-			return false;
-
-		$permalink_structure = get_option('permalink_structure');
-
-		if ( empty($feed) )
-			$feed = get_default_feed();
-
-		if ( '' == $permalink_structure )
-			$link = get_option('home') . "?feed=$feed&amp;tag=" . $tag->slug;
-		else {
-			$link = get_tag_link($tag->term_id);
-			if ( $feed == get_default_feed() )
-				$feed_link = 'feed';
-			else
-				$feed_link = "feed/$feed";
-			$link = trailingslashit($link) . user_trailingslashit($feed_link, 'feed');
-		}
-
-		$link = apply_filters('tag_feed_link', $link, $feed);
-
-		return $link;
 	}
 }
 
@@ -159,4 +117,3 @@ function extra_feed_link($input = '') {
 
 	$extraFeedLink->theme_link($input);
 }
-
