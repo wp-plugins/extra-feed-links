@@ -4,7 +4,7 @@ Donate link: http://scribu.net/projects
 Tags: archive, comments, feed, rss
 Requires at least: 2.5
 Tested up to: 2.7
-Stable tag: trunk
+Stable tag: 1.1.3
 
 Adds extra feed auto-discovery links to various page types (categories, tags, search results etc.)
 

@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Extra Feed Links
-Version: 1.1.3
+Version: 1.1.4a
 Description: (<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>) Adds extra feed auto-discovery links to various page types (categories, tags, search results etc.).
 Author: scribu
 Author URI: http://scribu.net/
@@ -9,14 +9,20 @@ Plugin URI: http://scribu.net/projects/extra-feed-links.html
 */
 
 class extraFeedLink {
+	var $key = 'efl-format';
+	var $format = array();
 	var $format_name;
-	var $format;
 	var $url;
 	var $title;
 	var $text;
 
+	// PHP4 compatibility
 	function extraFeedLink() {
-		$this->format = get_option('efl-format');
+		$this->__construct();
+	}
+
+	function __construct() {
+		$this->format = get_option($this->key);
 		add_action('wp_head', array(&$this, 'head_link'));
 	}
 
@@ -107,6 +113,7 @@ global $extraFeedLink;
 if ( is_admin() ) {
 	require_once ('inc/admin.php');
 	$extraFeedLink = new extraFeedLinkAdmin();
+	register_activation_hook(__FILE__, array(&$extraFeedLink, 'install'));
 }
 else
 	$extraFeedLink = new extraFeedLink();

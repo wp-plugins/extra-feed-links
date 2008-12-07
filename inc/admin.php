@@ -1,18 +1,57 @@
 <?php
 class extraFeedLinkAdmin extends extraFeedLink {
 	var $default_format = array(
-			'home' => array(TRUE, 'All comments for %site_title%'),
-			'comments' => array(TRUE, 'Comments: %title%'),
-			'category' => array(TRUE, 'Category: %title%'),
-			'tag' => array(TRUE, 'Tag: %title%'),
-			'author' => array(TRUE, 'Author: %title%'),
-			'search' => array(TRUE, 'Search: %title%')
-		);
+		'home' => array(TRUE, 'All comments for %site_title%'),
+		'comments' => array(TRUE, 'Comments: %title%'),
+		'category' => array(TRUE, 'Category: %title%'),
+		'tag' => array(TRUE, 'Tag: %title%'),
+		'author' => array(TRUE, 'Author: %title%'),
+		'search' => array(TRUE, 'Search: %title%')
+	);
 
+	// PHP4 compatibility
 	function extraFeedLinkAdmin() {
-		add_option('efl-format', $this->default_format);
+		$this->__construct();
+	}
 
+	function __construct() {
 		add_action('admin_menu', array(&$this, 'page_init'));
+	}
+
+	function install() {
+		if ( $old = get_option($this->key) )
+			$this->default_format = array_merge($this->default_format, $old);
+
+		   add_option($this->key, $this->default_format) or
+		update_option($this->key, $this->default_format);
+	}
+
+	function handle_options() {
+		$this->format = get_option($this->key);
+
+		if ( !isset($_POST['action']) )
+			return;
+
+		$message = '<div class="updated"><p>Options <strong>%s</strong>.</p></div>';
+
+		// Update options
+		if ( 'Save Changes' == $_POST['action'] ) {
+			foreach ($this->format as $name => $value) {
+				$this->format[$name][0] = $_POST['show-' . $name];
+				$this->format[$name][1] = $_POST['format-' . $name];
+			}
+
+			update_option($this->key, $this->format);
+			printf($message, 'saved');
+		}
+
+		// Reset options
+		if ( 'Reset' == $_POST['action'] ) {
+			$this->format = $this->default_format;
+			
+			update_option($this->key, $this->format);
+			printf($message, 'reset');
+		}
 	}
 
 	// Options page
@@ -23,34 +62,8 @@ class extraFeedLinkAdmin extends extraFeedLink {
 		}
 	}
 
-	function update_options() {
-		$this->format = get_option('efl-format');
-
-		if ( !isset($_POST['action']) )
-			return;
-
-		// Update options
-		if ( 'Save Changes' == $_POST['action'] ) {
-			foreach ($this->format as $name => $value) {
-				$this->format[$name][0] = $_POST['show-' . $name];
-				$this->format[$name][1] = $_POST['format-' . $name];
-			}
-
-			update_option('efl-format', $this->format);
-			echo '<div class="updated"><p>Options <strong>saved</strong>.</p></div>';
-		}
-
-		// Reset options
-		if ( 'Reset' == $_POST['action'] ) {
-			update_option('efl-format', $this->default_format);
-
-			$this->format = $this->default_format;
-			echo '<div class="updated"><p>Options <strong>reset</strong>.</p></div>';
-		}
-	}
-
 	function page() {
-		$this->update_options();
+		$this->handle_options();
 ?>
 <div class="wrap">
 <h2>Extra Feed Links</h2>
