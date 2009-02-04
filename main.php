@@ -1,29 +1,38 @@
 <?php
 /*
 Plugin Name: Extra Feed Links
-Version: 1.1.4a
-Description: (<a href="options-general.php?page=extra-feed-links"><strong>Settings</strong></a>) Adds extra feed auto-discovery links to various page types (categories, tags, search results etc.).
+Version: 1.1.4b
+Description: Adds extra feed auto-discovery links to various page types (categories, tags, search results etc.).
 Author: scribu
 Author URI: http://scribu.net/
 Plugin URI: http://scribu.net/projects/extra-feed-links.html
+
+Copyright (C) 2009 scribu.net (scribu AT gmail DOT com)
+
+This program is free software; you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation; either version 3 of the License, or
+(at your option) any later version.
+
+This program is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
 class extraFeedLink {
-	var $key = 'efl-format';
-	var $format = array();
+	var $format;
 	var $format_name;
 	var $url;
 	var $title;
 	var $text;
 
-	// PHP4 compatibility
-	function extraFeedLink() {
-		$this->__construct();
-	}
-
 	function __construct() {
-		$this->format = get_option($this->key);
-		add_action('wp_head', array(&$this, 'head_link'));
+		$this->format = $GLOBALS['EFL_options']->get();
+		add_action('wp_head', array($this, 'head_link'));
 	}
 
 	function head_link() {
@@ -108,15 +117,20 @@ class extraFeedLink {
 }
 
 // Init
-global $extraFeedLink;
+function efl_init() {
+	if ( !class_exists('scbOptions_05') )
+		require_once(dirname(__FILE__) . '/inc/scbOptions.php');
 
-if ( is_admin() ) {
-	require_once ('inc/admin.php');
-	$extraFeedLink = new extraFeedLinkAdmin();
-	register_activation_hook(__FILE__, array(&$extraFeedLink, 'install'));
+	$GLOBALS['EFL_options'] = new scbOptions_05('efl-format');
+	$GLOBALS['extraFeedLink'] = new extraFeedLink();
+
+	if ( is_admin() ) {
+		require_once (dirname(__FILE__) . '/admin.php');
+		new extraFeedLinkAdmin(__FILE__);
+	}
 }
-else
-	$extraFeedLink = new extraFeedLink();
+
+efl_init();
 
 // Template tag
 function extra_feed_link($input = '') {
