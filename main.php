@@ -5,7 +5,7 @@ Version: 1.1.4.1
 Description: Adds extra feed auto-discovery links to various page types (categories, tags, search results etc.).
 Author: scribu
 Author URI: http://scribu.net/
-Plugin URI: http://scribu.net/projects/extra-feed-links.html
+Plugin URI: http://scribu.net/wordpress/extra-feed-links
 
 Copyright (C) 2009 scribu.net (scribu AT gmail DOT com)
 

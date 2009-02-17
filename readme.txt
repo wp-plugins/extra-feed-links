@@ -1,6 +1,6 @@
 === Extra Feed Links ===
 Contributors: scribu
-Donate link: http://scribu.net/projects
+Donate link: http://scribu.net/wordpress
 Tags: archive, comments, feed, rss, aton
 Requires at least: 2.5
 Tested up to: 2.7.1
