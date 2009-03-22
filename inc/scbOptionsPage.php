@@ -1,16 +1,17 @@
 <?php
 
-// Version 0.6
+// Version 0.7.1
 
 if ( ! class_exists('scbForms_06') )
 	require_once(dirname(__FILE__) . '/scbForms.php');
 
-abstract class scbOptionsPage_06 extends scbForms_06 {
+abstract class scbOptionsPage_07 extends scbForms_07 {
 	// Page args
 	protected $args = array(
 		'page_title' => '',
 		'short_title' => '',
-		'page_slug' => ''
+		'page_slug' => '',
+		'type' => 'settings'
 	);
 
 	// Nonce string
@@ -30,10 +31,11 @@ abstract class scbOptionsPage_06 extends scbForms_06 {
 
 
 	// Main constructor
-	public function __construct($file) {
+	public function __construct($file = '') {
 		$this->set_url($file);
 
 		$this->setup();
+		$this->check_args();
 
 		if ( isset($this->options) )
 			$this->options->setup($file, $this->defaults);
@@ -49,6 +51,11 @@ abstract class scbOptionsPage_06 extends scbForms_06 {
 
 	// This is where the page content goes
 	abstract public function page_content();
+
+	// To be used in ::page_head()
+	protected function admin_msg($msg, $class = "updated") {
+		echo "<div class='$class fade'><p>$msg</p></div>\n";
+	}
 
 	// Wraps a string in a <script> tag
 	public function wrap_js($string) {
@@ -97,19 +104,24 @@ abstract class scbOptionsPage_06 extends scbForms_06 {
 	}
 
 	// Generates a submit form button
-	protected function submit_button($action = 'Save Changes') {
+	protected function submit_button($action = 'Save Changes', $class = "button") {
 		if ( in_array($action, $this->actions) )
 			trigger_error("Duplicate action for submit button: {$action}", E_USER_WARNING);
 
-		$this->actions[] = $action;
-		$output .= "<p class='submit'>\n";
-		$output .= parent::input(array(
+		$args = array(
 			'type' => 'submit',
 			'names' => 'action',
 			'values' => $action,
-			'extra' => 'class="button-primary"',
+			'extra' => '',
 			'desc_pos' => 'none'
-		));
+		);
+
+		if ( ! empty($class) )
+			$args['extra'] = "class={$class}'";
+
+		$this->actions[] = $action;
+		$output .= "<p class='submit'>\n";
+		$output .= parent::input($args);
 		$output .= "</p>\n";
 
 		return $output;
@@ -119,13 +131,19 @@ abstract class scbOptionsPage_06 extends scbForms_06 {
 //_____HELPER METHODS (SHOULD NOT BE CALLED DIRECTLY)_____
 
 
-	// Set plugin_dir
-	protected function set_url($file) {
-		if ( function_exists('plugins_url') )
-			$this->plugin_url = plugins_url(plugin_basename(dirname($file)));
-		else
-			// < WP 2.6
-			$this->plugin_url = get_option('siteurl') . '/wp-content/plugins/' . plugin_basename(dirname($file));
+	// Checks and sets default args
+	protected function check_args() {
+		if ( empty($this->args['page_title']) )
+			trigger_error('Page title cannot be empty', E_USER_ERROR);
+
+		if ( empty($this->args['type']) )
+			$this->args['type'] = 'settings';
+
+		if ( empty($this->args['short_title']) )
+			$this->args['short_title'] = $this->args['page_title'];
+
+		if ( empty($this->args['page_slug']) )
+			$this->args['page_slug'] = sanitize_title_with_dashes($this->args['short_title']);
 	}
 
 	// Registers a page
@@ -134,9 +152,15 @@ abstract class scbOptionsPage_06 extends scbForms_06 {
 			return false;
 
 		extract($this->args);
-		$page = add_options_page($short_title, $short_title, 8, $page_slug, array($this, 'page_content'));
 
-		add_action( "admin_print_scripts-$page", array($this, 'page_head'));
+		if ( 'settings' == $type )
+			$page = add_options_page($short_title, $short_title, 8, $page_slug, array($this, 'page_content'));
+		elseif ( 'tools' == $type )
+			$page = add_management_page($short_title, $short_title, 8, $page_slug, array($this, 'page_content'));
+		else
+			trigger_error("Unknown page type: $page", E_USER_WARNING);
+
+		add_action("admin_print_styles-$page", array($this, 'page_head'));
 	}
 
 	// Update options
@@ -151,6 +175,15 @@ abstract class scbOptionsPage_06 extends scbForms_06 {
 
 		$this->options->update($new_options);
 
-		echo '<div class="updated fade"><p>Settings <strong>saved</strong>.</p></div>';
+		$this->admin_msg('Settings <strong>saved</strong>.');
+	}
+
+	// Set plugin_dir
+	protected function set_url($file) {
+		if ( function_exists('plugins_url') )
+			$this->plugin_url = plugins_url(plugin_basename(dirname($file)));
+		else
+			// < WP 2.6
+			$this->plugin_url = get_option('siteurl') . '/wp-content/plugins/' . plugin_basename(dirname($file));
 	}
 }

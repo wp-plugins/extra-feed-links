@@ -1,14 +1,14 @@
 <?php
 
-if ( !class_exists('scbOptionsPage_06') )
+if ( !class_exists('scbOptionsPage_07') )
 	require_once(dirname(__FILE__) . '/inc/scbOptionsPage.php');
 
-class extraFeedLinkAdmin extends scbOptionsPage_06 {
+class extraFeedLinkAdmin extends scbOptionsPage_07 {
 	protected function setup() {
 		$this->options = $GLOBALS['EFL_options'];
 
 		$this->defaults = array(
-			'home' => array(TRUE, 'All comments for %site_title%'),
+			'home' => array(FALSE, '%site_title% Comments'),
 			'comments' => array(TRUE, 'Comments: %title%'),
 			'category' => array(TRUE, 'Category: %title%'),
 			'tag' => array(TRUE, 'Tag: %title%'),
@@ -31,8 +31,6 @@ class extraFeedLinkAdmin extends scbOptionsPage_06 {
 
 		check_admin_referer($this->nonce);
 
-		$message = '<div class="updated"><p>Options <strong>%s</strong>.</p></div>';
-
 		// Update options
 		if ( 'Save Changes' == $_POST['action'] ) {
 			foreach (array_keys($this->options->get()) as $name) {
@@ -41,14 +39,22 @@ class extraFeedLinkAdmin extends scbOptionsPage_06 {
 			}
 
 			$this->options->update($new_format);
-			printf($message, 'saved');
+			$this->admin_msg('Settings <strong>saved</strong>.');
 		}
 
 		// Reset options
 		if ( 'Reset' == $_POST['action'] ) {
 			$this->options->reset();
-			printf($message, 'reset');
+			$this->admin_msg('Settings <strong>reset</strong>.');
 		}
+	}
+
+	public function page_head() {
+?>
+<style type="text/css">
+table input.widefat {width:250px !important}
+</style>
+<?php
 	}
 
 	public function page_content() {
