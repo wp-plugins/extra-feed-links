@@ -1,7 +1,7 @@
 <?php
 /*
 Plugin Name: Extra Feed Links
-Version: 1.2
+Version: 1.2a
 Description: Lets you control extra feed auto-discovery links on various page types (categories, tags, search results etc.)
 Author: scribu
 Author URI: http://scribu.net/
