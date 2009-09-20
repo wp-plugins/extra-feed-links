@@ -3,8 +3,8 @@ Contributors: scribu
 Donate link: http://scribu.net/wordpress
 Tags: archive, comments, feed, rss, aton
 Requires at least: 2.5
-Tested up to: 2.8
-Stable tag: trunk
+Tested up to: 2.9-rare
+Stable tag: 1.1.5.1
 
 Adds extra feed auto-discovery links to various page types (categories, tags, search results etc.)
 
@@ -37,10 +37,15 @@ You can use `extra_feed_link()` inside your theme to display a link to the feed 
 
 == Changelog ==
 
+= 1.2 =
+* updated admin page
+* drop compatibility with WordPress older than 2.8
+* [more info](http://scribu.net/wordpress/extra-feed-links/efl-1-1.html)
+
 = 1.1.5 =
 * WP 2.8 compatibility
 
-= 1.1 =
+= 1.1.1 =
 * italian translation
 
 = 1.1 =

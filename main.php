@@ -1,8 +1,8 @@
 <?php
 /*
 Plugin Name: Extra Feed Links
-Version: 1.1.5.1
-Description: Adds extra feed auto-discovery links to various page types (categories, tags, search results etc.).
+Version: 1.2
+Description: Lets you control extra feed auto-discovery links on various page types (categories, tags, search results etc.)
 Author: scribu
 Author URI: http://scribu.net/
 Plugin URI: http://scribu.net/wordpress/extra-feed-links
@@ -23,120 +23,140 @@ You should have received a copy of the GNU General Public License
 along with this program. If not, see <http://www.gnu.org/licenses/>.
 */
 
-class extraFeedLink {
-	var $format;
-	var $format_name;
-	var $url;
-	var $title;
-	var $text;
+_efl_init();
+function _efl_init()
+{
+	$options = new scbOptions('efl-format', __FILE__, array(
+		'home' => array(FALSE, '%site_title% Comments'),
+		'comments' => array(TRUE, 'Comments: %title%'),
+		'category' => array(TRUE, 'Category: %title%'),
+		'tag' => array(TRUE, 'Tag: %title%'),
+		'author' => array(TRUE, 'Author: %title%'),
+		'search' => array(TRUE, 'Search: %title%')
+	));
 
-	function __construct() {
-		$this->format = $GLOBALS['EFL_options']->get();
-		add_action('wp_head', array($this, 'head_link'));
+	extraFeedLink::init($options->get());
+
+	if ( is_admin() ) 
+	{
+		require_once dirname(__FILE__) . '/admin.php';
+		new extraFeedLinkAdmin(__FILE__, $options);
+	}
+}
+
+class ExtraFeedLink
+{
+	static $options;
+
+	static $format;
+	static $format_name;
+	static $url;
+	static $title;
+	static $text;
+
+	function init($format)
+	{
+		self::$format = $format;
+
+		remove_action('wp_head', 'feed_links_extra', 3);
+		add_action('wp_head', array(__CLASS__, 'head_link'));
 	}
 
-	function head_link() {
-		$this->generate();
+	function head_link() 
+	{
+		self::generate();
 
-		if( !$this->url || !$this->text )
+		if( !self::$url || !self::$text )
 			return;
 
-		echo "\n" . '<link rel="alternate" type="application/rss+xml" title="' . $this->text . '" href="' . $this->url . '" />' . "\n";
+		echo "\n" . '<link rel="alternate" type="application/rss+xml" title="' . self::$text . '" href="' . self::$url . '" />' . "\n";
 	}
 
-	function theme_link($input) {
-		$this->generate(TRUE);
+	function theme_link($input) 
+	{
+		self::generate(TRUE);
 
-		if( !$this->url )
+		if( !self::$url )
 			return;
 
 		if ( substr($input, 0, 4) == 'http' )
-			echo '<a href="' . $this->url . '" title="' . $this->text . '"><img src="' . $input . '" alt="rss icon" /></a>';
+			echo '<a href="' . self::$url . '" title="' . self::$text . '"><img src="' . $input . '" alt="rss icon" /></a>';
 		elseif ( $input == '' )
-			echo '<a href="' . $this->url . '" title="' . $this->text . '">' . $this->text . '</a>';
+			echo '<a href="' . self::$url . '" title="' . self::$text . '">' . self::$text . '</a>';
 		elseif ( $input == 'raw' )
-			echo $this->url;
+			echo self::$url;
 		else
-			echo '<a href="' . $this->url . '" title="' . $this->text . '">' . $input . '</a>';
+			echo '<a href="' . self::$url . '" title="' . self::$text . '">' . $input . '</a>';
 	}
 
-	function generate($for_theme = FALSE) {
-		$this->title = $this->url = NULL;
+	function generate($for_theme = FALSE) 
+	{
+		self::$title = self::$url = NULL;
 
-		if ( is_home() && ($this->format['home'][0] || $for_theme) ) {
-			$this->url = get_bloginfo('comments_rss2_url');
-			$this->format_name = 'home';
+		if ( is_home() && (self::$format['home'][0] || $for_theme) )
+		{
+			self::$url = get_bloginfo('comments_rss2_url');
+			self::$format_name = 'home';
 		}
-		elseif ( (is_single() || is_page()) && ($this->format['comments'][0] || $for_theme) ) {
+		elseif ( is_singular() && (self::$format['comments'][0] || $for_theme) ) 
+		{
 			global $post;
-			if ( $post->comment_status == 'open' ) {
-				$this->url = get_post_comments_feed_link($post->ID);
-				$this->title = $post->post_title;
-				$this->format_name = 'comments';
+
+			if ( $post->comment_status == 'open' ) 
+			{
+				self::$url = get_post_comments_feed_link($post->ID);
+				self::$title = $post->post_title;
+				self::$format_name = 'comments';
 			}
 		}
-		elseif ( is_category() && ($this->format['category'][0] || $for_theme) ) {
+		elseif ( is_category() && (self::$format['category'][0] || $for_theme) )
+		{
 			global $wp_query;
 			$cat_obj = $wp_query->get_queried_object();
 
-			$this->url = get_category_feed_link($cat_obj->term_id);
-			$this->title = $cat_obj->name;
-			$this->format_name = 'category';
+			self::$url = get_category_feed_link($cat_obj->term_id);
+			self::$title = $cat_obj->name;
+			self::$format_name = 'category';
 		}
-		elseif ( is_tag() && ($this->format['tag'][0] || $for_theme) ) {
+		elseif ( is_tag() && (self::$format['tag'][0] || $for_theme) )
+		{
 			global $wp_query;
 			$tag_obj = $wp_query->get_queried_object();
 
-			$this->url = get_tag_feed_link($tag_obj->term_id);
-			$this->title = $tag_obj->name;
-			$this->format_name = 'tag';
+			self::$url = get_tag_feed_link($tag_obj->term_id);
+			self::$title = $tag_obj->name;
+			self::$format_name = 'tag';
 		}
-		elseif ( is_author() && ($this->format['author'][0] || $for_theme) ) {
+		elseif ( is_author() && (self::$format['author'][0] || $for_theme) )
+		{
 			global $wp_query;
 			$author_obj = $wp_query->get_queried_object();
 
-			$this->url = get_author_feed_link($author_obj->ID);
-			$this->title = $author_obj->user_nicename;
-			$this->format_name = 'author';
+			self::$url = get_author_feed_link($author_obj->ID);
+			self::$title = $author_obj->user_nicename;
+			self::$format_name = 'author';
 		}
-		elseif ( is_search() && ($this->format['search'][0] || $for_theme) ) {
+		elseif ( is_search() && (self::$format['search'][0] || $for_theme) )
+		{
 			$search = attribute_escape(get_search_query());
 
-			$this->url = get_search_feed_link($search);
-			$this->title = $search;
-			$this->format_name = 'search';
+			self::$url = get_search_feed_link($search);
+			self::$title = $search;
+			self::$format_name = 'search';
 		}
 
 		// Set the appropriate format
-		$this->text = $this->format[$this->format_name][1];
+		self::$text = self::$format[self::$format_name][1];
 
 		// Convert substitution tags
-		$this->text = str_replace('%title%', $this->title, $this->text);
-		$this->text = str_replace('%site_title%', get_option('blogname'), $this->text);
+		self::$text = str_replace('%title%', self::$title, self::$text);
+		self::$text = str_replace('%site_title%', get_option('blogname'), self::$text);
 	}
 }
-
-// Init
-function efl_init() {
-	if ( !class_exists('scbOptions_06') )
-		require_once(dirname(__FILE__) . '/inc/scbOptions.php');
-
-	$GLOBALS['EFL_options'] = new scbOptions_06('efl-format');
-	$GLOBALS['extraFeedLink'] = new extraFeedLink();
-
-	if ( is_admin() ) {
-		require_once (dirname(__FILE__) . '/admin.php');
-		new extraFeedLinkAdmin(__FILE__);
-	}
-}
-
-efl_init();
-
-remove_action('wp_head', 'feed_links_extra', 3);
 
 // Template tag
-function extra_feed_link($input = '') {
-	global $extraFeedLink;
-
-	$extraFeedLink->theme_link($input);
+function extra_feed_link($input = '') 
+{
+	ExtraFeedLink::theme_link($input);
 }
+

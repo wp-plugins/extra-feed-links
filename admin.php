@@ -1,35 +1,18 @@
 <?php
 
-if ( !class_exists('scbOptionsPage_07') )
-	require_once(dirname(__FILE__) . '/inc/scbOptionsPage.php');
-
-class extraFeedLinkAdmin extends scbOptionsPage_07 {
-	protected function setup() {
-		$this->options = $GLOBALS['EFL_options'];
-
-		$this->defaults = array(
-			'home' => array(FALSE, '%site_title% Comments'),
-			'comments' => array(TRUE, 'Comments: %title%'),
-			'category' => array(TRUE, 'Category: %title%'),
-			'tag' => array(TRUE, 'Tag: %title%'),
-			'author' => array(TRUE, 'Author: %title%'),
-			'search' => array(TRUE, 'Search: %title%')
-		);
-
-		$this->args = array(
-			'page_title' => 'Extra Feed Links',
-			'short_title' => 'Extra Feed Links',
-			'page_slug' => 'extra-feed-links'
-		);
+class extraFeedLinkAdmin extends scbAdminPage 
+{
+	function setup() 
+	{
+		$this->args = array('page_title' => 'Extra Feed Links');
 
 		$this->nonce = 'efl-settings';
 	}
 
-	protected function form_handler() {
+	function form_handler() 
+	{
 		if ( empty($_POST['action']) )
 			return false;
-
-		check_admin_referer($this->nonce);
 
 		// Update options
 		if ( 'Save Changes' == $_POST['action'] ) {
@@ -49,16 +32,13 @@ class extraFeedLinkAdmin extends scbOptionsPage_07 {
 		}
 	}
 
-	public function page_head() {
-?>
-<style type="text/css">
-table input.widefat {width:250px !important}
-</style>
-<?php
+	public function page_head() 
+	{
+		echo $this->css_wrap('table input.widefat {width:250px !important}');
 	}
 
-	public function page_content() {
-		echo $this->page_header();
+	public function page_content() 
+	{
 ?>
 <p>The table below allows you to select which page types get an extra header link and the format of the link text.</p>
 
@@ -70,7 +50,7 @@ table input.widefat {width:250px !important}
 		<tr>
 			<th scope="col" class="check-column"><input type="checkbox" /></th>
 			<th scope="col">Page type</th>
-			<th scope="col">Text format</th>
+			<th scope="col">Title format</th>
 		</tr>
 		</thead>
 		<tbody>
@@ -79,16 +59,16 @@ table input.widefat {width:250px !important}
 			<th scope='row' class='check-column'><?php 
 				echo $this->input(array(
 					'type' => 'checkbox',
-					'names' => 'show-'.$name,
-					'desc_pos' => 'none'
+					'name' => 'show-'.$name,
+					'desc_pos' => 'none',
 				), array('show-'.$name => $value[0]));
 			?></th>
 			<td><?php echo ucfirst($name) ?></td>
-			<td><?php 
+			<td><?php
 				echo $this->input(array(
 					'type' => 'text',
-					'names' => 'format-'.$name,
-					'desc_pos' => 'none'
+					'name' => 'format-'.$name,
+					'desc_pos' => 'none',
 				), array('format-'.$name => $value[1]));
 			?></td>
 		</tr>
@@ -99,7 +79,7 @@ table input.widefat {width:250px !important}
 	<div class="tablenav" style="width:auto">
 		<div class="alignleft">
 			<input name="action" type="submit" class="button-primary button" value="Save Changes" />
-			<input name="action" type="submit" class="button-secondary" onClick="return confirm('Are you sure you want to reset to defaults?')" value="Reset" />
+			<input name="action" type="submit" class="button-secondary no-ajax" onClick="return confirm('Are you sure you want to reset to defaults?')" value="Reset" />
 		</div>
 	</div>
 
@@ -114,7 +94,6 @@ table input.widefat {width:250px !important}
 	</ul>
 </div>
 <?php	
-		echo $this->page_footer();
 	}
 }
 
