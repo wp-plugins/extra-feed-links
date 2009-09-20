@@ -26,6 +26,8 @@ along with this program. If not, see <http://www.gnu.org/licenses/>.
 _efl_init();
 function _efl_init()
 {
+	require_once dirname(__FILE__) . '/scb/load.php';
+
 	$options = new scbOptions('efl-format', __FILE__, array(
 		'home' => array(FALSE, '%site_title% Comments'),
 		'comments' => array(TRUE, 'Comments: %title%'),
