@@ -35,6 +35,14 @@ You can use `extra_feed_link()` inside your theme to display a link to the feed 
 * `<?php extra_feed_link('http://url/of/image'); ?>` (creates an image tag linked to the feed URL)
 * `<?php extra_feed_link('raw'); ?>` (just displays the feed URL)
 
+== Frequently Asked Questions ==
+
+= "Parse error: syntax error, unexpected T_CLASS..." Help! =
+
+Make sure your new host is running PHP 5. Add this line to wp-config.php:
+
+`var_dump(PHP_VERSION);`
+
 == Changelog ==
 
 = 1.1.5 =
