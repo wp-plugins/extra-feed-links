@@ -7,7 +7,7 @@ Author: scribu
 Author URI: http://scribu.net/
 Plugin URI: http://scribu.net/wordpress/extra-feed-links
 
-Copyright (C) 2009 scribu.net (scribu AT gmail DOT com)
+Copyright (C) 2009 Cristi Burcă (scribu@gmail.com)
 
 This program is free software; you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

@@ -16,6 +16,8 @@ This plugin lets you control what these links look like and where they should ap
 
 It also has a template tag that you can use in your theme.
 
+Links: [Plugin News](http://scribu.net/wordpress/extra-feed-links) | [Author's Site](http://scribu.net)
+
 == Installation ==
 
 1. Install the plugin through the admin or via FTP.
