@@ -20,6 +20,8 @@ This plugin adds feed auto-discovery links to any page type:
 
 It also has a template tag that you can use in your theme.
 
+Links: [Plugin News](http://scribu.net/wordpress/extra-feed-links) | [Author's Site](http://scribu.net)
+
 == Installation ==
 
 1. Unzip the archive and put the folder into your plugins folder (/wp-content/plugins/).
